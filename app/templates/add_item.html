@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Add Inventory Item{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Add New Inventory Item</h1>
+
+    <form method="POST" action="{{ url_for('inventory.add_inventory') }}">
+        <div class="mb-3">
+            <label for="name" class="form-label">Item Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <input type="text" class="form-control" id="category" name="category">
+        </div>
+
+        <div class="mb-3">
+            <label for="stock_quantity" class="form-label">Stock Quantity</label>
+            <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" min="0" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="unit" class="form-label">Unit</label>
+            <select class="form-select" id="unit" name="unit">
+                <option value="">-- Select Unit --</option>
+                <option value="pieces">Pieces</option>
+                <option value="boxes">Boxes</option>
+                <option value="packs">Packs</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Price per Unit ($)</label>
+            <input type="number" step="0.01" class="form-control" id="price" name="price">
+        </div>
+
+        <div class="mb-3">
+            <label for="low_stock_threshold" class="form-label">Low Stock Threshold</label>
+            <input type="number" class="form-control" id="low_stock_threshold" name="low_stock_threshold" min="0">
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Item</button>
+        <a href="{{ url_for('inventory.get_all_inventory') }}" class = "btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}

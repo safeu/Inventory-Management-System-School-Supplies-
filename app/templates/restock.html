@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Restock Item{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Restock Item</h1>
+
+    <form method="POST" action="{{ url_for('transaction.restock_item') }}">
+        <div class="mb-3">
+            <label for="item_id" class="form-label">Item ID</label>
+            <input type="number" class="form-control" id="item_id" name="item_id" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="unit_price" class="form-label">Unit Price ($)</label>
+            <input type="number" step="0.01" class="form-control" id="unit_price" name="unit_price" min="0" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Restock</button>
+        <a href="{{ url_for('transaction.get_transactions') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}
