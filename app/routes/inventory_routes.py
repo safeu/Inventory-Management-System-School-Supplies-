@@ -21,12 +21,13 @@ def add_inventory():
     if request.method == 'POST':
         name = request.form.get('name')
         stock_quantity = int(request.form.get('stock_quantity', 0))
-        price = float(request.form.get('price', 0.0))
+        cost_price = float(request.form.get('cost_price', 0.0))
+        selling_price = float(request.form.get('selling_price')) if request.form.get('selling_price') else None
         low_stock_threshold = int(request.form.get('low_stock_threshold', 10))
         category = request.form.get('category')
         unit = request.form.get('unit')
 
-        success, message = add_item(name, stock_quantity, price, low_stock_threshold, category, unit)
+        success, message = add_item(name, stock_quantity, cost_price, selling_price, low_stock_threshold, category, unit)
         if success:
             flash('Item added successfully!', 'success')
             return redirect(url_for('inventory.get_all_inventory'))
@@ -45,12 +46,13 @@ def update_inventory(item_id):
     if request.method == 'POST':
         name = request.form.get('name')
         stock_quantity = int(request.form.get('stock_quantity', item['stock_quantity']))
-        price = float(request.form.get('price', item['price']))
+        cost_price = float(request.form.get('cost_price', item['cost_price']))
+        selling_price = float(request.form.get('selling_price')) if request.form.get('selling_price') else None
         low_stock_threshold = int(request.form.get('low_stock_threshold', item['low_stock_threshold']))
         category = request.form.get('category', item['category'])
         unit = request.form.get('unit', item['unit'])
 
-        success, message = update_item(item_id, name=name, stock_quantity=stock_quantity, price=price, low_stock_threshold=low_stock_threshold, category=category, unit=unit)
+        success, message = update_item(item_id, name=name, stock_quantity=stock_quantity, cost_price=cost_price, selling_price = selling_price, low_stock_threshold=low_stock_threshold, category=category, unit=unit)
         if success:
             flash('Item updated successfully!', 'success')
             return redirect(url_for('inventory.get_all_inventory'))

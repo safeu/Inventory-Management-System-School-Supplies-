@@ -42,7 +42,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Category</th>
-                    <th>Stock</th>
+                    <th>Stock Quantity</th>
                     <th>Threshold</th>
                 </tr>
             </thead>
@@ -51,7 +51,7 @@
                     <tr>
                         <td>{{ item['name'] }}</td>
                         <td>{{ item['category'] }}</td>
-                        <td>{{ item['stock'] }}</td>
+                        <td>{{ item['stock_quantity'] }}</td>
                         <td>{{ item['low_stock_threshold'] }}</td>
                     </tr>
                 {% endfor %}

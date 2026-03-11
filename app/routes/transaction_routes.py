@@ -15,6 +15,7 @@ def get_transactions():
 
 @transaction.route('/restock', methods=['GET','POST'])
 def restock_item():
+    item_id = request.args.get('item_id')
     if request.method == 'POST':
         item_id = int(request.form.get('item_id'))
         quantity = int(request.form.get('quantity'))
@@ -25,10 +26,11 @@ def restock_item():
             return redirect(url_for('transaction.get_transactions'))
         else:
             flash(f"Error processing restock: {message}", 'error')
-    return render_template('restock.html')
+    return render_template('restock.html', item_id=item_id)
 
 @transaction.route('/sale', methods=['GET','POST'])
 def sale_item():
+    item_id = request.args.get('item_id')
     if request.method == 'POST':
         item_id = int(request.form.get('item_id'))
         quantity = int(request.form.get('quantity'))
@@ -39,4 +41,4 @@ def sale_item():
             return redirect(url_for('transaction.get_transactions'))
         else:
             flash(f"Error processing sale: {message}", 'error')
-    return render_template('sale.html')
+    return render_template('sale.html', item_id=item_id)

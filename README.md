@@ -9,6 +9,8 @@ A full-stack web application built with Python, Flask, and SQLite to manage scho
 - 🔄 **Transaction Tracking** — Record sales and restocks with full transaction history
 - ⚠️ **Low Stock Alerts** — Automatic detection of items below configurable stock thresholds
 - 📁 **Bulk CSV Import** — Import multiple inventory items at once via CSV file upload
+- 🏷️ **Automatic Pricing** — Selling price auto-calculated at 100% markup from cost price, with manual override option
+- 🔁 **Quick Transactions** — Record sales and restocks directly from the inventory page
 
 ## Tech Stack
 
@@ -55,7 +57,7 @@ requirements.txt
 
 1. Clone the repository
 ```bash
-git clone 
+git clone https://github.com/safeu/inventory-management-system-school-supplies.git
 cd inventory-management
 ```
 
@@ -78,9 +80,11 @@ http://localhost:5000
 
 To bulk import inventory items, upload a CSV file with the following headers:
 ```
-name, stock_quantity, price, low_stock_threshold, category, unit
-Pencils, 100, 0.50, 10, Stationery, pieces
-Notebooks, 50, 2.00, 5, Paper, packs
+name, stock_quantity, cost_price, low_stock_threshold, category, unit
+Pencils, 100, 13.00, 10, Stationery, pieces
+Notebooks, 50, 35.00, 5, Paper, packs
+
+Note: selling_price is optional — defaults to 2x cost_price if not provided.
 ```
 ## Motivation
 

@@ -21,13 +21,15 @@ def get_item_by_id(item_id):
         logger.error(f"Error fetching item by id: {e}")
         return False, str(e)
 
-def add_item(name, stock_quantity, price, low_stock_threshold, category, unit):
+def add_item(name, stock_quantity, cost_price, selling_price=None, low_stock_threshold=10, category=None, unit=None):
     try:
         db = get_db()
+        if not selling_price:
+            selling_price = cost_price * 2
         db.execute("""
-            INSERT INTO items (name, stock_quantity, price, low_stock_threshold, category, unit)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (name, stock_quantity, price, low_stock_threshold, category, unit))
+            INSERT INTO items (name, stock_quantity, cost_price, selling_price, low_stock_threshold, category, unit)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (name, stock_quantity, cost_price, selling_price, low_stock_threshold, category, unit))
         db.commit()
         return True, db.execute("SELECT last_insert_rowid()").fetchone()[0]
     except Exception as e:
@@ -37,10 +39,21 @@ def add_item(name, stock_quantity, price, low_stock_threshold, category, unit):
 def add_bulk_items(items):
     try:
         db = get_db()
-        items_data = [(item['name'], item['stock_quantity'], item['price'], item['low_stock_threshold'], item['category'], item['unit']) for item in items]
+        items_data = []
+        for item in items:
+            selling_price = item.get('selling_price') or float(item['cost_price']) * 2
+            items_data.append((
+                item['name'],
+                item['stock_quantity'],
+                item['cost_price'],
+                selling_price,
+                item.get('low_stock_threshold', 10),
+                item.get('category'),
+                item.get('unit')))
+
         db.executemany("""
-            INSERT INTO items (name, stock_quantity, price, low_stock_threshold, category, unit)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO items (name, stock_quantity, cost_price, selling_price, low_stock_threshold, category, unit)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """, items_data)
         db.commit()
         return True, len(items_data)
@@ -57,7 +70,7 @@ def update_item(item_id, **kwargs):
         if not item:
             raise ValueError(f"Item with id {item_id} not found")
 
-        allowed = {'name', 'stock_quantity', 'price', 'low_stock_threshold', 'category', 'unit'}
+        allowed = {'name', 'stock_quantity', 'cost_price', 'selling_price', 'low_stock_threshold', 'category', 'unit'}
         fields = {k: v for k, v in kwargs.items() if k in allowed}
         if not fields:
             raise ValueError("No valid fields to update")
@@ -126,7 +139,7 @@ def get_items_by_category(category):
 def get_total_inventory_value():
     try:
         db = get_db()
-        total_value = db.execute("SELECT SUM(stock_quantity * price) AS total_value FROM items").fetchone()['total_value']
+        total_value = db.execute("SELECT SUM(stock_quantity * selling_price) AS total_value FROM items").fetchone()['total_value']
         return True, total_value if total_value is not None else 0.0
     except Exception as e:
         logger.error(f"Error calculating total inventory value: {e}")
