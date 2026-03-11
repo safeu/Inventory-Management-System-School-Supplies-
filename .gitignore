@@ -1,4 +1,5 @@
 .env
+.csv
 *.db
 __pycache__/
 *.pyc
